@@ -28,18 +28,8 @@ class Neighbourhood(models.Model):
         self.save()
 
     def delete_Neighbourhood(self):
-        self.delete()class Neighbourhood(models.Model):
-    name = models.CharField(max_length=20)
-    centres = models.ManyToManyField(Business_centres)
-
-    def __str__(self):
-        return self.name
-
-    def save_Neighbourhood(self):
-        self.save()
-
-    def delete_Neighbourhood(self):
         self.delete()
+        
 
 class Profile(models.Model):
     username = models.ForeignKey(User,on_delete=models.CASCADE)
