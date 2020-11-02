@@ -135,3 +135,10 @@ def search_business(request):
     else:
         message = "You haven't searched for any image category"
     return render(request, "results.html")
+
+
+class ProfileList(APIView):
+    def get(self, request, format=None):
+        all_users = Profile.objects.all()
+        serializers = ProfileSerializer(all_users, many=True)
+        return Response(serializers.data)
