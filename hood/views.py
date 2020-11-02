@@ -142,3 +142,10 @@ class ProfileList(APIView):
         all_users = Profile.objects.all()
         serializers = ProfileSerializer(all_users, many=True)
         return Response(serializers.data)
+
+
+class NeighbourhoodList(APIView):
+    def get(self, request, format=None):
+        all_users = Neighbourhood.objects.all()
+        serializers = NeighbourhoodSerializer(all_users, many=True)
+        return Response(serializers.data)
