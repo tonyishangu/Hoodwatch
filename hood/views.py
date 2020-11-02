@@ -103,3 +103,6 @@ def leave_hood(request, id):
     request.user.profile.save()
     return redirect('hood')
 
+
+def profile(request, username):
+    return render(request, 'profile.html')
