@@ -40,3 +40,22 @@ class Neighbourhood(models.Model):
 
     def delete_Neighbourhood(self):
         self.delete()
+
+class Profile(models.Model):
+    username = models.ForeignKey(User,on_delete=models.CASCADE)
+    location = models.CharField(max_length=50)
+    user_avatar = models.ImageField(upload_to = 'images/')
+    neighbourhood =  models.ForeignKey(Neighbourhood,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.username.username
+
+    def save_profile(self):
+        self.save()
+
+    def delete_profile(self):
+        self.delete()
+
+    class Meta:
+        ordering = ['username']
+
