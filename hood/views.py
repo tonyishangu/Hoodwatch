@@ -149,3 +149,10 @@ class NeighbourhoodList(APIView):
         all_users = Neighbourhood.objects.all()
         serializers = NeighbourhoodSerializer(all_users, many=True)
         return Response(serializers.data)
+
+
+class Business_centresList(APIView):
+    def get(self, request, format=None):
+        all_users = Business_centres.objects.all()
+        serializers = Business_centresSerializers(all_users, many=True)
+        return Response(serializers.data)
