@@ -1,16 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
-#from pyuploadcare.dj.models import ImageField
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from datetime import datetime
+from cloudinary.models import CloudinaryField
 
 
 class NeighbourHood(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
     location = models.CharField(max_length=60, null=True, blank=True)
     admin = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name='hood', null=True, blank=True)
-    hood_logo = models.ImageField(upload_to='images/', null=True, blank=True)
+    hood_logo = CloudinaryField('images')
     description = models.TextField(null=True, blank=True)
     health_tell = models.IntegerField(null=True, blank=True)
     police_number = models.IntegerField(null=True, blank=True)
@@ -34,8 +34,7 @@ class Profile(models.Model):
         User, on_delete=models.CASCADE, related_name='profile', null=True, blank=True)
     name = models.CharField(max_length=80, blank=True)
     bio = models.TextField(max_length=254, blank=True)
-    profile_picture = models.ImageField(
-        upload_to='images/', default='default.png')
+    profile_picture = CloudinaryField('images')
     location = models.CharField(max_length=50, blank=True, null=True)
     neighbourhood = models.ForeignKey(
         NeighbourHood, on_delete=models.SET_NULL, null=True, related_name='members', blank=True)
