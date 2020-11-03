@@ -34,6 +34,9 @@ INSTALLED_APPS = [
     'hood',
     'tinymce',
     'rest_framework',
+    'crispy_forms',
+    'bootstrap4',
+    'django_registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -126,3 +129,6 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'

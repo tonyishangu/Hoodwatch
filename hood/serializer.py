@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Business_centres, Profile, Neighbourhood
+from .models import Business, Profile, NeighbourHood
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -10,11 +10,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class NeighbourhoodSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Neighbourhood
+        model = NeighbourHood
         fields = ('name', 'centers')
 
 
 class Business_centresSerializers(serializers.ModelSerializer):
     class Meta:
-        model = Business_centres
+        model = Business
         fields = ('centre_name', 'contact_info', 'emergency_service')

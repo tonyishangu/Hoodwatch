@@ -27,11 +27,11 @@
     <title>Hood</title>
 </head>
 
-<body>
+<body style="background-image: url(https://cdn.theatlantic.com/thumbor/wd3zdOLwag03-ui6pLHzOUjwVhY=/0x158:3000x1846/720x405/media/img/mt/2018/06/GettyImages_81100278/original.jpg);">
     <div class="wrapper">
         {% include 'bar.html' %}
-        <div id="content"style="background-image: url({% static 'images/bg.jpg' %}); background-repeat:no-repeat;background-size:cover">
-            {% include 'navbar.html' %}
+        <!--<div id="content"style="background-image: url({% static 'images/bg.jpg' %}); background-repeat:no-repeat;background-size:cover">-->
+            {% include "navbar.html" %}
 
             {% block content %}
 

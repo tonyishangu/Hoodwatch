@@ -1,51 +1,86 @@
 from django.db import models
 from django.contrib.auth.models import User
+#from pyuploadcare.dj.models import ImageField
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from datetime import datetime
 
-# Create your models here.
 
-class Business_centres(models.Model):
-    centre_name = models.CharField(max_length=20)
-    contact_info = models.CharField(max_length=20)
-    emergency_service = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.centre_name
-
-    def save_centre(self):
-        self.save()
-
-    def delete_centre(self):
-        self.delete()
-
-class Neighbourhood(models.Model):
-    name = models.CharField(max_length=20)
-    centres = models.ManyToManyField(Business_centres)
+class NeighbourHood(models.Model):
+    name = models.CharField(max_length=50, null=True, blank=True)
+    location = models.CharField(max_length=60, null=True, blank=True)
+    admin = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name='hood', null=True, blank=True)
+    hood_logo = models.ImageField(upload_to='images/', null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    health_tell = models.IntegerField(null=True, blank=True)
+    police_number = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} hood'
 
-    def save_Neighbourhood(self):
+    def create_neighborhood(self):
         self.save()
 
-    def delete_Neighbourhood(self):
+    def delete_neighborhood(self):
         self.delete()
-        
+
+    @classmethod
+    def find_neighborhood(cls, neighborhood_id):
+        return cls.objects.filter(id=neighborhood_id)
+
 
 class Profile(models.Model):
-    username = models.ForeignKey(User,on_delete=models.CASCADE)
-    location = models.CharField(max_length=50)
-    user_avatar = models.ImageField(upload_to = 'images/')
-    neighbourhood =  models.ForeignKey(Neighbourhood,on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='profile', null=True, blank=True)
+    name = models.CharField(max_length=80, blank=True)
+    bio = models.TextField(max_length=254, blank=True)
+    profile_picture = models.ImageField(
+        upload_to='images/', default='default.png')
+    location = models.CharField(max_length=50, blank=True, null=True)
+    neighbourhood = models.ForeignKey(
+        NeighbourHood, on_delete=models.SET_NULL, null=True, related_name='members', blank=True)
 
     def __str__(self):
-        return self.username.username
+        return f'{self.user.username} profile'
 
-    def save_profile(self):
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+
+
+class Business(models.Model):
+    name = models.CharField(max_length=120)
+    email = models.EmailField(max_length=254)
+    description = models.TextField(blank=True)
+    neighbourhood = models.ForeignKey(
+        NeighbourHood, on_delete=models.CASCADE, related_name='business')
+    user = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name='owner')
+
+    def __str__(self):
+        return f'{self.name} Business'
+
+    def create_business(self):
         self.save()
 
-    def delete_profile(self):
+    def delete_business(self):
         self.delete()
 
-    class Meta:
-        ordering = ['username']
+    @classmethod
+    def search_business(cls, name):
+        return cls.objects.filter(name__icontains=name).all()
 
+
+class Post(models.Model):
+    title = models.CharField(max_length=120, null=True)
+    post = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name='post_owner')
+    hood = models.ForeignKey(
+        NeighbourHood, on_delete=models.CASCADE, related_name='hood_post')
